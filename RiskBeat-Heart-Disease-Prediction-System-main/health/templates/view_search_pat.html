@@ -1,0 +1,79 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+  @media (max-width: 768px) {
+    #example {
+      font-size: 13px;
+    }
+    #example th, #example td {
+      padding: 6px;
+    }
+    #example h5 {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    #example {
+      font-size: 12px;
+    }
+    #example h5 {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<div class="container my-5">
+  <h1 class="text-center text-uppercase text-dark font-weight-bold mb-4">Search Logs</h1>
+
+  <div class="table-responsive">
+    <table id="example" class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>#</th>
+          {% if request.user.patient_set.all.0 %}
+          <th>Date</th>
+          {% else %}
+          <th>Patient Name</th>
+          {% endif %}
+          <th>Accuracy</th>
+          <th>Result</th>
+          <th>Heart Value</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in data %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          {% if request.user.patient_set.all.0 %}
+          <td>{{ i.created }}</td>
+          {% else %}
+          <td>{{ i.patient.user.first_name }} {{ i.patient.user.last_name }}</td>
+          {% endif %}
+          <td>{{ i.prediction_accuracy }}</td>
+          <td>
+            {% if i.result == "0" %}
+              <h5 class="text-success">Healthy</h5>
+            {% else %}
+              <h5 class="text-danger">Unhealthy</h5>
+            {% endif %}
+          </td>
+          <td>{{ i.values_list }}</td>
+          <td>
+            <a href="/delete_searched/{{ i.id }}" onclick="return confirm('Are you sure?')">
+              <button class="btn btn-danger btn-sm">
+                <i class="fa fa-trash-o"></i>
+              </button>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

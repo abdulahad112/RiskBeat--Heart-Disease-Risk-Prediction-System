@@ -1,0 +1,153 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .div1 {
+        color: green;
+    }
+    .div2 {
+        color: red;
+    }
+</style>
+
+<div class="container mt-5 mb-5 p-4 bg-white border rounded shadow-sm">
+    <h2 class="text-uppercase text-dark font-weight-bold text-center">My Detail</h2>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Full Name:</div>
+        <div class="col-6 div1">{{ pro.user.first_name }} {{ pro.user.last_name }}</div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Image:</div>
+        <div class="col-6">
+            <img src="{{ pro.image.url }}" class="img-fluid" style="max-width:100px; height:auto;">
+        </div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Email Id:</div>
+        <div class="col-6 div1">{{ pro.user.email }}</div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Date of Birth:</div>
+        <div class="col-6 div1">{{ pro.dob }}</div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Contact:</div>
+        <div class="col-6 div1">{{ pro.contact }}</div>
+    </div>
+    <hr>
+
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">City:</div>
+        <div class="col-6 div1">{{ pro.address }}</div>
+    </div>
+    <hr>
+
+    {% if error != "pat" %}
+    <div class="row py-2">
+        <div class="col-6 font-weight-bold div2">Specialist:</div>
+        <div class="col-6 div1">{{ pro.category }}</div>
+    </div>
+    <hr>
+    {% endif %}
+
+    <div class="mb-4">
+        <a href="{% url 'edit_profile' %}">
+            <button class="btn btn-dark btn-block">Update Detail</button>
+        </a>
+    </div>
+
+    <!-- Subscribe/Unsubscribe -->
+    <div>
+        <form id="subscribe-form">
+            <input type="email" name="email" id="email" required placeholder="Enter your email" class="form-control mt-2">
+            <button type="submit" id="subscribe-btn" class="btn btn-success btn-block mt-3">
+                Subscribe for Notifications
+            </button>
+            <button type="button" id="unsubscribe-btn" class="btn btn-danger btn-block mt-2" style="display:none;">
+                Unsubscribe
+            </button>
+        </form>
+        <div id="response-message" class="mt-2"></div>
+    </div>
+
+    <!-- JS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let emailInput = document.getElementById("email");
+            let subscribeBtn = document.getElementById("subscribe-btn");
+            let unsubscribeBtn = document.getElementById("unsubscribe-btn");
+
+            emailInput.addEventListener("input", function () {
+                checkSubscriptionStatus(emailInput.value);
+            });
+
+            function checkSubscriptionStatus(email) {
+                if (email.trim() === "") return;
+                fetch("{% url 'check_subscription' %}?email=" + encodeURIComponent(email))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.subscribed) {
+                            subscribeBtn.style.display = "none";
+                            unsubscribeBtn.style.display = "block";
+                        } else {
+                            subscribeBtn.style.display = "block";
+                            unsubscribeBtn.style.display = "none";
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+
+            document.getElementById("subscribe-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+                let email = emailInput.value;
+
+                fetch("{% url 'subscribe_email' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
+                    checkSubscriptionStatus(email);
+                })
+                .catch(error => console.error("Error:", error));
+            });
+
+            unsubscribeBtn.addEventListener("click", function () {
+                let email = emailInput.value;
+
+                fetch("{% url 'unsubscribe_email' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: new URLSearchParams({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("response-message").innerHTML = `<p>${data.message || data.error}</p>`;
+                    checkSubscriptionStatus(email);
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    </script>
+
+</div>
+{% endblock %}

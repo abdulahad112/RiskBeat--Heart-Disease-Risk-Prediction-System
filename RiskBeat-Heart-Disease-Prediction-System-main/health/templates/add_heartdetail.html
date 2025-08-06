@@ -1,0 +1,142 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+<style>body{    height: auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #1e90ff 50%, #87cefa 75%, #e0f7fa 100%);
+    background-attachment: fixed;}</style>
+<section class="container py-5">
+    <div class="card shadow-lg p-4" style="border-radius: 15px; background-color: #f0f8ff;">
+        <h3 class="text-center text-dark font-weight-bold mb-4">Add Your Heart Detail</h3>
+        <hr>
+        <form action="" method="post" enctype="multipart/form-data" id="heartForm">
+            {% csrf_token %}
+        
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Age</label>
+                    <input type="number" class="form-control" name="age" min="1" max="120" placeholder="Age" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Sex</label>
+                    <select class="form-control" name="sex" required>
+                        <option value="0">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Chest Pain</label>
+                    <select class="form-control" name="cp" required>
+                        <option value="0">Typical Angina</option>
+                        <option value="1">Atypical Angina</option>
+                        <option value="2">Non-anginal Pain</option>
+                        <option value="3">Asymptomatic</option>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Resting BP</label>
+                    <input type="number" class="form-control" name="trestbps" min="50" max="200" placeholder="BP" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Cholesterol</label>
+                    <input type="number" class="form-control" name="chole" min="100" max="600" placeholder="Cholesterol" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Fasting BS</label>
+                    <select class="form-control" name="fbs" required>
+                        <option value="0">&lt; 120 mg/dl</option>
+                        <option value="1">&gt; 120 mg/dl</option>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Resting ECG</label>
+                    <select class="form-control" name="restecg" required>
+                        <option value="0">Normal</option>
+                        <option value="1">ST-T Abnormality</option>
+                        <option value="2">Left Ventricular Hypertrophy</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Max Heart Rate</label>
+                    <input type="number" class="form-control" name="thalach" placeholder="MHR" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Exercise Angina</label>
+                    <select class="form-control" name="exang" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Oldpeak</label>
+                    <input type="number" step="0.1" class="form-control" name="old_peak" placeholder="ST Depression" required>
+                </div>
+                <div class="col-md-4">
+                    <label>Slope of ST</label>
+                    <select class="form-control" name="slope" required>
+                        <option value="0">Upsloping</option>
+                        <option value="1">Flat</option>
+                        <option value="2">Downsloping</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Major Vessels</label>
+                    <input type="number" min="0" max="3" class="form-control" name="ca" placeholder="0-3" required>
+                </div>
+            </div>
+        
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label>Thalassemia</label>
+                    <select class="form-control" name="thal" required>
+                        <option value="1">Normal</option>
+                        <option value="2">Fixed Defect</option>
+                        <option value="3">Reversible Defect</option>
+                    </select>
+                </div>
+            </div>
+        
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark px-5 py-2" style="background-color: #007bff; color: white; border-radius: 10px;">Submit Heart Data</button>
+            </div>
+        </form>
+        
+        <!-- Autofill Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('heartForm');
+            
+                // Autofill existing values from localStorage (excluding csrf)
+                for (let field of form.elements) {
+                    if (field.name && field.name !== 'csrfmiddlewaretoken' && localStorage.getItem(field.name)) {
+                        field.value = localStorage.getItem(field.name);
+                    }
+                }
+            
+                // Save new values on input/select change (excluding csrf)
+                form.addEventListener('input', function () {
+                    for (let field of form.elements) {
+                        if (field.name && field.name !== 'csrfmiddlewaretoken') {
+                            localStorage.setItem(field.name, field.value);
+                        }
+                    }
+                });
+            });
+            </script>
+            
+        
+    </div>
+</section>
+
+{% endblock %}

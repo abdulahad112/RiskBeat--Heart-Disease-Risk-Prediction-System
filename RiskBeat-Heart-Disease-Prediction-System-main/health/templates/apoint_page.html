@@ -1,0 +1,480 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block body %}
+  <!-- Google Fonts & Icon CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="{% static 'css/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/owl.carousel.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/owl.theme.default.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/templatemo-medic-care.css' %}" rel="stylesheet">
+
+  <style>
+    /* Animated Background */
+    .animated-background {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; z-index: -1;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      background-attachment: fixed;
+    }
+    .bg-element, .bg-blob, .bg-circle {
+      position: absolute; border-radius: 50%;
+      filter: blur(40px);
+      animation: float 30s infinite linear;
+    }
+    .bg-element { background: linear-gradient(135deg, rgba(52,152,219,0.1) 0%, rgba(46,204,113,0.08) 100%); }
+    .bg-circle {
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(52,152,219,0.15) 0%, rgba(52,152,219,0) 70%);
+      animation: pulse 8s infinite ease-in-out;
+      filter: none;
+    }
+    .bg-blob {
+      background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+      filter: blur(60px); opacity: .15;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0,0) rotate(0); }
+      25% { transform: translate(50px,-50px) rotate(90deg); }
+      50% { transform: translate(100px,0) rotate(180deg); }
+      75% { transform: translate(50px,50px) rotate(270deg); }
+      100% { transform: translate(0,0) rotate(360deg); }
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity:.8; }
+      50% { transform: scale(1.05); opacity:1; }
+    }
+
+    /* Root Colors & Typography */
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --accent-color: #e74c3c;
+      --light-bg: #f8f9fa;
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    body {
+      margin:0; padding:0;
+      font-family:'Poppins',sans-serif;
+      background-color:#f5f7fa;
+      color:#333;
+    }
+
+    /* Back Button */
+    .back-button {
+      position:absolute; top:20px; left:20px;
+      background:var(--primary-color); color:#fff;
+      width:40px; height:40px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; z-index:10;
+      box-shadow:0 4px 8px rgba(0,0,0,0.1);
+      transition:all .3s ease;
+    }
+    .back-button:hover { background:#2980b9; transform:translateX(-3px); }
+
+    /* Section Padding & Header */
+    .section-padding { padding:80px 0; }
+    .booking-header { text-align:center; margin-bottom:40px; }
+    .booking-header h2 {
+      font-size:2.2rem; font-weight:700;
+      color:var(--secondary-color); margin-bottom:10px;
+    }
+    .booking-header p {
+      color:#6c757d; font-size:1.1rem;
+      max-width:600px; margin:0 auto;
+    }
+
+    /* Booking Form Card */
+    .booking-form {
+      background:#fff; border-radius:15px;
+      padding:40px; box-shadow:var(--card-shadow);
+      position:relative; overflow:hidden;
+    }
+    .booking-form::before {
+      content:''; position:absolute; top:0; left:0;
+      width:6px; height:100%;
+      background:linear-gradient(to bottom, var(--primary-color), #1abc9c);
+    }
+    .form-control {
+      border:2px solid #e1e5eb; border-radius:10px;
+      padding:14px 20px; margin-bottom:20px;
+      transition:all .3s ease; font-size:16px;
+    }
+    .form-control:focus {
+      border-color:var(--primary-color);
+      box-shadow:0 0 0 .2rem rgba(52,152,219,0.25);
+    }
+
+    /* ─── Enhanced Time-Slot Grid & Cards ───────────────── */
+    #slot-container {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      gap:1rem;
+      margin:20px 0;
+    }
+    .slot-btn {
+      position:relative; padding:12px 8px;
+      text-align:center; border:1px solid #e1e5eb;
+      border-radius:8px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.05);
+      background:#fff; font-weight:600;
+      cursor:pointer; transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+      user-select:none;
+    }
+    .slot-btn:hover {
+      transform:translateY(-3px);
+      box-shadow:0 8px 16px rgba(0,0,0,0.1);
+      border-color:var(--primary-color);
+    }
+    .slot-btn.selected {
+      background:var(--primary-color);
+      color:#fff;
+      border-color:var(--primary-color);
+      box-shadow:0 6px 14px rgba(0,0,0,0.12);
+    }
+    .slot-btn.booked {
+      opacity:.5; cursor:not-allowed; pointer-events:none;
+    }
+    .slot-btn .time { display:block; font-size:1rem; }
+    .slot-btn .status { font-size:.75rem; margin-top:4px; color:#888; }
+    /* ─────────────────────────────────────────────────────── */
+
+    /* Submit Button */
+    #submit-button {
+      background:linear-gradient(135deg, var(--primary-color), #1abc9c);
+      color:#fff; border:none; border-radius:10px;
+      padding:14px 30px; font-weight:600; font-size:18px;
+      width:100%; margin-top:15px; letter-spacing:.5px;
+      transition:all .3s ease;
+    }
+    #submit-button:hover {
+      transform:translateY(-3px);
+      box-shadow:0 7px 15px rgba(52,152,219,0.3);
+    }
+    #submit-button:disabled {
+      padding: 10px;
+      background:#bdc3c7; cursor:not-allowed;
+      transform:none; box-shadow:none;
+    }
+
+    /* Doctor Profiles */
+    .doctor-profiles { margin-top:80px; }
+    .doctor-profiles h3 {
+      font-size:2rem; font-weight:700; text-align:center;
+      color:var(--secondary-color); margin-bottom:40px;
+      position:relative;
+    }
+    .doctor-profiles h3::after {
+      content:''; display:block;
+      width:80px; height:4px;
+      background:linear-gradient(to right, var(--primary-color), #1abc9c);
+      margin:12px auto 0; border-radius:2px;
+    }
+    .doctor-card {
+      border-radius:15px; overflow:hidden;
+      box-shadow:var(--card-shadow); background:#fff;
+      display:flex; flex-direction:column;
+      transition:all .3s ease;
+    }
+    .doctor-card:hover {
+      transform:translateY(-10px);
+      box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    }
+    .doctor-img { height:220px; width:100%; object-fit:cover; }
+    .card-body { padding:25px; flex-grow:1; display:flex; flex-direction:column; }
+    .card-title { font-size:1.4rem; font-weight:700; color:var(--secondary-color); margin-bottom:15px; }
+    .card-text { color:#555; line-height:1.6; font-size:1rem; margin-bottom:20px; flex-grow:1; }
+    .card-text strong { color:var(--secondary-color); font-weight:600; }
+    .availability-badge {
+      background:rgba(46,204,113,0.15); color:#27ae60;
+      padding:5px 12px; border-radius:20px; font-size:.9rem;
+      font-weight:500; align-self:flex-start;
+    }
+    .doctors-scroll-container {
+      display:flex; overflow-x:auto; padding:15px 0 30px; gap:25px;
+      scrollbar-width:thin; scrollbar-color:var(--primary-color) #f1f1f1;
+    }
+    .doctors-scroll-container::-webkit-scrollbar { height:8px; }
+    .doctors-scroll-container::-webkit-scrollbar-thumb {
+      background:var(--primary-color); border-radius:4px;
+    }
+    .doctors-scroll-container::-webkit-scrollbar-track {
+      background:#f1f1f1; border-radius:4px;
+    }
+
+    /* Responsive */
+    @media(max-width:768px) {
+      .booking-form { padding:30px 20px; }
+      .back-button { top:15px; left:15px; }
+      .section-padding { padding:60px 0; }
+    }
+  </style>
+
+  <!-- Floating Background Elements -->
+  <div class="animated-background">
+    <div class="bg-element" style="width:300px;height:300px;top:10%;left:5%;animation-duration:40s;"></div>
+    <div class="bg-element" style="width:200px;height:200px;top:30%;left:80%;animation-duration:30s;"></div>
+    <div class="bg-element" style="width:250px;height:250px;top:70%;left:15%;animation-duration:35s;"></div>
+    <div class="bg-element" style="width:150px;height:150px;top:80%;left:70%;animation-duration:25s;"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-blob" style="width:400px;height:400px;top:20%;right:10%;animation-duration:45s;"></div>
+    <div class="bg-blob" style="width:600px;height:600px;bottom:10%;left:5%;animation-duration:50s;animation-delay:5s;"></div>
+  </div>
+
+  <!-- Booking Section -->
+  <section class="section-padding" id="booking">
+    <div class="container">
+      <div class="back-button" onclick="history.back()">
+        <i class="bi bi-arrow-left"></i>
+      </div>
+      <div class="booking-header">
+        <h2>Book Your Appointment</h2>
+        <p>Schedule your visit with our expert doctors. Select a doctor, choose a date and time, and we'll take care of the rest.</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 col-12 mx-auto">
+          <div class="booking-form">
+            <form id="booking-form" action="{% url 'booking_form' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <!-- Personal Info -->
+                <div class="col-md-6">
+                  <input type="text" name="name" class="form-control" placeholder="Your Full Name" required>
+                </div>
+                <div class="col-md-6">
+                  <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                </div>
+                <div class="col-12">
+                  <input type="tel" name="contact_number" class="form-control" placeholder="Contact Number" required>
+                </div>
+                <!-- Doctor Selection -->
+                <div class="col-12">
+                  <input type="text" id="search" class="form-control" placeholder="Search doctor by name, specialization, or location">
+                </div>
+                <div class="col-12">
+                  <select name="doctor" id="doctor" class="form-control" required>
+                    <option value="" disabled selected>Select a Doctor</option>
+                    {% for doctor in doctors %}
+                      <option value="{{ doctor.id }}">{{ doctor.user.username }} – {{ doctor.category }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <select name="appointment_type" class="form-control" required>
+                    <option value="" disabled selected>Appointment Type</option>
+                    <option value="in_person">In-Person</option>
+                    <option value="virtual">Virtual</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <input type="date" name="date" id="date" class="form-control" required>
+                </div>
+                <!-- Time Slots -->
+                <div class="col-12">
+                  <h5 class="mb-3">Available Time Slots:</h5>
+                  <div id="slot-container">
+                    <!-- injected by JS -->
+                  </div>
+                </div>
+                
+                <!-- Message & Error -->
+                <div class="col-12">
+                  <textarea name="message" class="form-control" rows="4" placeholder="Additional details or requests"></textarea>
+                </div>
+                <div class="col-12">
+                  <div id="availability-error" class="alert alert-danger d-none"></div>
+                </div>
+                <!-- Submit -->
+                <div class="col-lg-5 col-md-6 col-8 mx-auto mt-3">
+                  <button type="submit" class="btn" id="submit-button" disabled>Confirm Appointment</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dateInput = document.getElementById("date");
+
+    // Set min attribute to today (YYYY-MM-DD)
+    const today = new Date();
+    const formattedToday = today.toISOString().split('T')[0];
+    dateInput.setAttribute("min", formattedToday);
+
+    // Optional: Extra manual check if user types date manually
+    dateInput.addEventListener("change", function () {
+        const selectedDate = new Date(this.value);
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);  // Normalize to midnight
+
+        if (selectedDate < now) {
+            alert("You cannot select a past date.");
+            this.value = "";
+        }
+    });
+});
+</script>
+
+
+<!-- Doctor Profiles -->
+<div class="doctor-profiles">
+  <div class="container">
+    <h3>Our Expert Medical Team</h3>
+    <div class="doctors-scroll-container">
+      {% for doctor in doctors %}
+        <div class="doctor-card" style="min-width:300px;">
+          <img src="{{ doctor.image.url }}" class="doctor-img"
+               alt="{{ doctor.user.username }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ doctor.user.get_full_name }}</h5>
+            <p class="card-text">
+              <strong>Specialization:</strong> {{ doctor.category }}<br>
+              <strong>Experience:</strong> {{ doctor.experience }} years<br>
+              <strong>Contact:</strong> {{ doctor.contact }}<br>
+              <strong>Location:</strong> {{ doctor.address }}<br>
+              <strong>Rating:</strong>
+              {% if doctor.avg_rating %}
+                {{ doctor.avg_rating|floatformat:1 }}★
+              {% else %}
+                Not rated yet
+              {% endif %}
+              
+            </p>
+            <span class="availability-badge">Available Today</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+  <!-- JS: Slots & Filtering -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const doctorInput   = document.getElementById("doctor"),
+            dateInput     = document.getElementById("date"),
+            slotContainer = document.getElementById("slot-container"),
+            submitButton  = document.getElementById("submit-button"),
+            searchInput   = document.getElementById("search"),
+            form          = document.getElementById("booking-form");
+    
+      // 1) Prevent past dates
+      dateInput.setAttribute("min", new Date().toISOString().split("T")[0]);
+    
+      // 2) Load slots via AJAX
+      function loadSlots() {
+        const dId = doctorInput.value, dt = dateInput.value;
+        if (!dId || !dt) {
+          slotContainer.innerHTML = `<p class="text-center text-muted py-4">Select a doctor & date to see slots</p>`;
+          submitButton.disabled = true;
+          return;
+        }
+        fetch(`/check-slots/?doctor_id=${dId}&date=${dt}`)
+          .then(r => r.json())
+          .then(data => {
+            slotContainer.innerHTML = "";
+            if (!data.slots.length) {
+              slotContainer.innerHTML = `<p class="text-center text-muted py-4">No slots—pick another date.</p>`;
+              submitButton.disabled = true;
+              return;
+            }
+            data.slots.forEach(slot => {
+              const available = !slot.is_booked; 
+              const card = document.createElement("div");
+              card.className = "slot-btn";
+              if (!available) card.classList.add("booked");
+              card.dataset.slot = `${slot.slot_def_id}|${slot.start}`;
+              card.innerHTML = `
+                <span class="time">${slot.start} – ${slot.end}</span>
+                <span class="status">${available ? "Available" : "Booked"}</span>`;
+              slotContainer.appendChild(card);
+            });
+            // attach click
+            document.querySelectorAll(".slot-btn").forEach(btn => {
+              if (btn.classList.contains("booked")) return;
+              btn.addEventListener("click", function() {
+                document.querySelectorAll(".slot-btn.selected")
+                  .forEach(s => s.classList.remove("selected"));
+                this.classList.add("selected");
+                let existing = form.querySelector('input[name="chosen_slot"]');
+                if (existing) existing.remove();
+                const h = document.createElement("input");
+                h.type = "hidden"; h.name = "chosen_slot";
+                h.value = this.dataset.slot;
+                form.appendChild(h);
+                submitButton.disabled = false;
+              });
+            });
+          })
+          .catch(() => {
+            slotContainer.innerHTML = `<p class="text-center text-danger py-4">Error loading slots. Try again.</p>`;
+            submitButton.disabled = true;
+          });
+      }
+    
+      doctorInput.addEventListener("change", loadSlots);
+      dateInput.addEventListener("change", loadSlots);
+    
+      // 3) Filter doctor dropdown
+      searchInput.addEventListener("input", () => {
+        const term = searchInput.value.toLowerCase();
+        doctorInput.querySelectorAll("option").forEach(o => {
+          if (!o.value) return;
+          o.style.display = o.textContent.toLowerCase().includes(term) ? "" : "none";
+        });
+      });
+    
+      // 4) AJAX form submit
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        submitButton.disabled = true;
+        submitButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Processing...`;
+    
+        const fd = new FormData(form);
+        fetch("{% url 'booking_form' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": fd.get("csrfmiddlewaretoken"),
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          body: fd
+        })
+        .then(r => r.json())
+        .then(json => {
+          if (json.success) {
+            form.outerHTML = `
+              <div class="text-center py-5">
+                <i class="bi bi-check-circle-fill text-success" style="font-size:4rem;"></i>
+                <h3 class="mt-3">Appointment Confirmed!</h3>
+                <p>You’ll get an email with all the details.</p>
+                <button class="btn btn-primary mt-3" onclick="location.reload()">Book Another</button>
+              </div>`;
+          } else {
+            const err = document.getElementById("availability-error");
+            err.textContent = json.error || "Something went wrong";
+            err.classList.remove("d-none");
+            submitButton.disabled = false;
+            submitButton.innerHTML = "Confirm Appointment";
+          }
+        })
+        .catch(() => {
+          const err = document.getElementById("availability-error");
+          err.textContent = "Network error. Try again.";
+          err.classList.remove("d-none");
+          submitButton.disabled = false;
+          submitButton.innerHTML = "Confirm Appointment";
+        });
+      });
+    
+      // init
+      slotContainer.innerHTML = `<p class="text-center text-muted py-4">Select a doctor & date to see slots</p>`;
+    });
+    </script>
+    
+{% endblock %}

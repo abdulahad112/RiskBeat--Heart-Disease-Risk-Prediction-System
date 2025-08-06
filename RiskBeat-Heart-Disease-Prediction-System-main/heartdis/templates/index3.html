@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Health Assessment | Modern Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #2d388a, #4a4f9e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .info-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .form-card {
+            flex: 2;
+            min-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 2;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-header p {
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-body {
+            padding: 35px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group label i {
+            margin-right: 10px;
+            color: #6a11cb;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a11cb;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e6ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236a11cb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
+        .form-control:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.15);
+            outline: none;
+            background-color: white;
+        }
+
+        .prediction-result {
+            margin-top: 2px;
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .prediction-result::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+        }
+
+        .risk {
+            border-color: #ff4757;
+            background: linear-gradient(to right, #fff5f7, #fff);
+        }
+
+        .risk::before {
+            background: #ff4757;
+        }
+
+        .no-risk {
+            border-color: #2ed573;
+            background: linear-gradient(to right, #f0fff4, #fff);
+        }
+
+        .no-risk::before {
+            background: #2ed573;
+        }
+
+        .prediction-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .risk .prediction-text {
+            color: #ff4757;
+        }
+
+        .no-risk .prediction-text {
+            color: #2ed573;
+        }
+
+        .accuracy {
+            font-size: 1rem;
+            color: #718096;
+            position: relative;
+            z-index: 2;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .submit-btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .is-invalid {
+            border-color: #ff4757;
+        }
+
+        .info-panel h3 {
+            font-size: 1.6rem;
+            color: #2d3748;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .info-panel h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 2px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #6a11cb;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h4 {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .info-card h4 i {
+            margin-right: 10px;
+            color: #2575fc;
+            background: rgba(37, 117, 252, 0.1);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-card p {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .form-card, .info-panel {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .submit-btn {
+                grid-column: 1;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .form-body {
+                padding: 25px;
+            }
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            font-size: 150px;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="info-panel">
+            <h3>Heart Health Insights</h3>
+            
+          <div class="info-card">
+    <h4><i class="fas fa-exclamation-triangle"></i> Medical Disclaimer</h4>
+    <p>This tool is intended for informational and educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your healthcare provider for personalized medical guidance.</p>
+</div>
+
+            <div class="info-card">
+                <h4><i class="fas fa-lightbulb"></i> Understanding Your Results</h4>
+                <p>A "Risk" result indicates a higher probability of cardiovascular issues. Consult with a healthcare provider for personalized advice and further testing.</p>
+            </div>
+            
+            <div class="info-card">
+                <h4><i class="fas fa-shield-alt"></i> Data Privacy</h4>
+                <p>Your health information is encrypted and never stored. All calculations happen locally in your browser for maximum privacy.</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="number">17.9M</div>
+                    <div class="label">Deaths/Yr</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">85%</div>
+                    <div class="label">Preventable</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">1 in 4</div>
+                    <div class="label">Adults at Risk</div>
+                </div>
+                
+            </div>
+            
+<!-- Animated Beating Heart -->
+<div style="margin-top: 70px; margin-bottom: 20px; text-align: center;">
+  <div id="heart" style="
+    width: 100px;
+    height: 90px;
+    background: red;
+    position: relative;
+    margin: 0 auto;
+    transform: rotate(-45deg);
+    animation: beat 1s infinite;
+  ">
+    <div style="
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: -50px;
+      left: 0;
+    "></div>
+    <div style="
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      left: 50px;
+      top: 0;
+    "></div>
+  </div>
+</div>
+
+<!-- Heart Rate Line Animation -->
+<div style="text-align: center;">
+  <svg width="80%" height="150px" viewBox="0 0 1000 100" preserveAspectRatio="none">
+    <path id="heartbeatPath" fill="none" stroke="red" stroke-width="2"
+      d="M0,50 
+         L50,50 
+         L70,30 
+         L90,70 
+         L110,50 
+         L150,50 
+         L170,20 
+         L190,80 
+         L210,50 
+         L1000,50" />
+    <animate 
+      xlink:href="#heartbeatPath" 
+      attributeName="stroke-dashoffset" 
+      from="1000" to="0" 
+      dur="2s" 
+      repeatCount="indefinite" />
+    <style>
+      path {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: draw 2s linear infinite;
+      }
+
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
+  </svg>
+</div>
+
+<!-- Heart Animation -->
+<style>
+@keyframes beat {
+  0% { transform: rotate(-45deg) scale(1); }
+  50% { transform: rotate(-45deg) scale(1.1); }
+  100% { transform: rotate(-45deg) scale(1); }
+}
+</style>
+
+        </div>
+        
+        <div class="form-card">
+            <div class="form-header">
+             
+               <div style="position: relative;  margin-bottom: 20px; padding: 10px;">
+<a href="{% url 'patient_home' %}" 
+   style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); text-decoration: none; color: rgb(255, 255, 255); font-size: 25px;">
+  <i class="fas fa-arrow-left"></i>
+</a>
+
+  <h2 style="margin: 0; font-size: 24px; font-weight: bold;">
+    Heart Disease Risk Assessment
+  </h2>
+</div>
+
+                <p>Complete this form to evaluate your Heart-health risks</p>
+            </div>
+            
+          
+      <div class="form-body">
+        <div class="prediction-result {% if prediction %}{% if prediction == 'Risk of Heart Disease' %}risk{% else %}no-risk{% endif %}{% else %}no-risk{% endif %}">
+          <div class="prediction-text">
+            {% if prediction %}
+              Prediction: {{ prediction }}
+            {% else %}
+              Complete the form to see your risk assessment
+            {% endif %}
+          </div>
+        
+
+
+          <div class="accuracy">
+            {% if prediction %}
+              {% if prediction == "Risk of Heart Disease" %}
+                Please consult a healthcare professional.
+              {% else %}
+                Continue your healthy habits!
+              {% endif %}
+            {% else %}
+              Your results will appear here after submission
+            {% endif %}
+
+            {% if explanations %}
+    <h3 style="color:#003366;">Health Insight:</h3>
+    <ul>
+        {% for reason in explanations %}
+            <li>{{ reason }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+  {% if prediction %}
+    <div style="max-width: 600px; margin: 30px auto; padding: 25px; background: linear-gradient(135deg, #fdfcfb, #e2d1c3); border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif;">
+        <p style="font-size: 20px; font-weight: bold; color: #2c3e50; text-align: center;">
+            <span style="color: #27ae60;">✔️ Result:</span> {{ prediction }}
+        </p>
+        <form method="get" action="{% url 'generate_pdf_report' %}" style="text-align: center; margin-top: 20px;">
+            {% for key, value in user_data.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+            <input type="hidden" name="prediction" value="{{ prediction }}">
+            <button type="submit" style="
+                background: #e74c3c;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            " onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'">
+                📄 Download Report as PDF
+            </button>
+        </form>
+    </div>
+{% endif %}
+          </div>
+        </div>
+
+
+
+<script type="text/javascript" 
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+
+        <form method="POST" action="{% url 'predict4' %}">
+          {% csrf_token %}
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="age"><i class="fas fa-birthday-cake"></i> Age (years)</label>
+              <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input type="number" class="form-control" id="age" name="age" placeholder="29-64 years" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+              <div class="input-icon">
+                <i class="fas fa-venus"></i>
+                <select class="form-control" id="gender" name="gender" required>
+                  <option value="" disabled selected>Select gender</option>
+                  <option value="1">Female</option>
+                  <option value="2">Male</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="height"><i class="fas fa-arrows-alt-v"></i> Height (cm)</label>
+              <div class="input-icon">
+                <i class="fas fa-ruler-vertical"></i>
+                <input type="number" class="form-control" id="height" name="height" placeholder="100-250 cm" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="weight"><i class="fas fa-weight"></i> Weight (kg)</label>
+              <div class="input-icon">
+                <i class="fas fa-weight-hanging"></i>
+                <input type="number" class="form-control" id="weight" name="weight" placeholder="30-200 kg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ap_hi"><i class="fas fa-tachometer-alt"></i> Systolic BP</label>
+              <div class="input-icon">
+                <i class="fas fa-heartbeat"></i>
+                <input type="number" class="form-control" id="ap_hi" name="ap_hi" placeholder="60-240 mmHg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ap_lo"><i class="fas fa-tachometer-alt"></i> Diastolic BP</label>
+              <div class="input-icon">
+                <i class="fas fa-heartbeat"></i>
+                <input type="number" class="form-control" id="ap_lo" name="ap_lo" placeholder="40-182 mmHg" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cholesterol"><i class="fas fa-vial"></i> Cholesterol Level</label>
+              <div class="input-icon">
+                <i class="fas fa-flask"></i>
+                <select class="form-control" id="cholesterol" name="cholesterol" required>
+                  <option value="" disabled selected>Select level</option>
+                  <option value="1">Normal</option>
+                  <option value="2">Above Normal</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gluc"><i class="fas fa-syringe"></i> Glucose Level</label>
+              <div class="input-icon">
+                <i class="fas fa-prescription-bottle"></i>
+                <select class="form-control" id="gluc" name="gluc" required>
+                  <option value="" disabled selected>Select level</option>
+                  <option value="1">Normal</option>
+                  <option value="2">Above Normal</option>
+                  <option value="3">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="smoke"><i class="fas fa-smoking"></i> Smoking</label>
+              <div class="input-icon">
+                <i class="fas fa-ban"></i>
+                <select class="form-control" id="smoke" name="smoke" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="alco"><i class="fas fa-wine-glass-alt"></i> Alcohol Intake</label>
+              <div class="input-icon">
+                <i class="fas fa-glass-whiskey"></i>
+                <select class="form-control" id="alco" name="alco" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="active"><i class="fas fa-running"></i> Physical Activity</label>
+              <div class="input-icon">
+                <i class="fas fa-bicycle"></i>
+                <select class="form-control" id="active" name="active" required>
+                  <option value="" disabled selected>Select option</option>
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+            </div>
+
+
+<div id="heart-age-box" style="margin: 20px 0; display:none;">
+  <p style="font-weight: bold;" id="heart-age-output"></p>
+</div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-heartbeat"></i> Assess My Heart Health
+            </button>
+            
+
+
+
+          </div>
+        </form>
+        <div id="risk-score-container" style="margin: 20px 0;">
+  <label><strong>Live Risk Estimation:</strong></label>
+  <div style="background-color: #eee; border-radius: 10px; overflow: hidden;">
+    <div id="risk-bar" style="width: 0%; height: 20px; background-color: green; transition: width 0.5s;"></div>
+  </div>
+  <p id="risk-label" style="margin-top: 5px; font-weight: bold;"></p>
+  <small style="color: #888; font-style: italic; display: block; margin-top: 10px;">
+  ⚠️ This is a rough estimation. For accurate results, please click on <strong>“Assess My Heart Health”</strong> to get a prediction from our model trained on over <strong>70,000+ data samples</strong>.
+
+  </small>
+</div>
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('healthForm');
+
+            // Autofill existing values from localStorage
+            for (let field of form.elements) {
+                if (field.name && localStorage.getItem(field.name)) {
+                    field.value = localStorage.getItem(field.name);
+                }
+            }
+
+            // Save new values on input/select change
+            form.addEventListener('input', function () {
+                for (let field of form.elements) {
+                    if (field.name) {
+                        localStorage.setItem(field.name, field.value);
+                    }
+                }
+            });
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            function validateField(id, min, max, errorMsg) {
+                let field = document.getElementById(id);
+                let errorElement = document.getElementById(id + "Error");
+                let value = parseFloat(field.value);
+                
+                if (isNaN(value) || value < min || value > max) {
+                    errorElement.textContent = errorMsg;
+                    field.classList.add("is-invalid");
+                    isValid = false;
+                } else {
+                    errorElement.textContent = "";
+                    field.classList.remove("is-invalid");
+                }
+            }
+
+            validateField("age", 29, 64, "Age must be between 29 and 64.");
+            validateField("gender", 1, 2, "Please select a valid gender.");
+            validateField("height", 100, 250, "Height must be between 100 cm and 250 cm.");
+            validateField("weight", 30, 200, "Weight must be between 30 kg and 200 kg.");
+            validateField("ap_hi", 60, 240, "Systolic BP must be between 60 and 240.");
+            validateField("ap_lo", 40, 182, "Diastolic BP must be between 40 and 182.");
+            validateField("cholesterol", 1, 3, "Please select a cholesterol level.");
+            validateField("gluc", 1, 3, "Please select a glucose level.");
+            validateField("smoke", 0, 1, "Please select an option for smoking.");
+            validateField("alco", 0, 1, "Please select an option for alcohol.");
+            validateField("active", 0, 1, "Please select an option for activity.");
+
+            if (isValid) {
+                // Simulate form submission and show result
+                const predictionResult = document.querySelector('.prediction-result');
+                const predictionText = document.querySelector('.prediction-text');
+                const accuracyText = document.querySelector('.accuracy');
+                
+                // Random result for demonstration
+                const isRisk = Math.random() > 0.5;
+                
+                predictionResult.classList.remove('risk', 'no-risk');
+                
+                if (isRisk) {
+                    predictionResult.classList.add('risk');
+                    predictionText.textContent = "Prediction: Risk of Heart Disease";
+                    accuracyText.textContent = "Consult a healthcare provider";
+                } else {
+                    predictionResult.classList.add('no-risk');
+                    predictionText.textContent = "Prediction: Low Risk of Heart Disease";
+                    accuracyText.textContent = "Continue healthy habits";
+                }
+                
+                // Scroll to result
+                predictionResult.scrollIntoView({ behavior: 'smooth' });
+                
+                // Add animation
+                predictionResult.style.animation = 'none';
+                setTimeout(() => {
+                    predictionResult.style.animation = 'fadeIn 0.8s ease-out';
+                }, 10);
+            }
+            
+            return false; // Prevent actual form submission for this demo
+        }
+
+// Save input on change
+document.querySelectorAll("input, select").forEach((input) => {
+    const name = input.name;
+    const savedValue = localStorage.getItem(name);
+    if (savedValue) input.value = savedValue;
+
+    input.addEventListener("change", () => {
+        localStorage.setItem(name, input.value);
+    });
+});
+
+// Optional: clear form memory button
+function clearFormMemory() {
+    document.querySelectorAll("input, select").forEach((input) => {
+        localStorage.removeItem(input.name);
+        input.value = "";
+    });
+}
+
+  function calculateRiskScore() {
+    let age = parseInt(document.getElementById('age')?.value || 0);
+    let ap_hi = parseInt(document.getElementById('ap_hi')?.value || 0);
+    let ap_lo = parseInt(document.getElementById('ap_lo')?.value || 0);
+    let cholesterol = parseInt(document.getElementById('cholesterol')?.value || 1);
+    let gluc = parseInt(document.getElementById('gluc')?.value || 1);
+    let smoke = parseInt(document.getElementById('smoke')?.value || 0);
+    let alco = parseInt(document.getElementById('alco')?.value || 0);
+    let active = parseInt(document.getElementById('active')?.value || 1);
+
+    // Basic scoring logic (you can refine this)
+    let score = 0;
+    if (age > 50) score += 2;
+    if (ap_hi > 140 || ap_lo > 90) score += 2;
+    if (cholesterol > 1) score += (cholesterol - 1) * 2;
+    if (gluc > 1) score += (gluc - 1) * 2;
+    if (smoke) score += 2;
+    if (alco) score += 1;
+    if (!active) score += 1;
+
+    let maxScore = 12;
+    let riskPercent = Math.min(100, (score / maxScore) * 100);
+
+    let bar = document.getElementById('risk-bar');
+    let label = document.getElementById('risk-label');
+
+    bar.style.width = riskPercent + "%";
+
+    if (riskPercent < 30) {
+      bar.style.backgroundColor = "green";
+      label.innerHTML = "✅ Low Risk";
+    } else if (riskPercent < 70) {
+      bar.style.backgroundColor = "orange";
+      label.innerHTML = "⚠️ Moderate Risk";
+    } else {
+      bar.style.backgroundColor = "red";
+      label.innerHTML = "❗ High Risk";
+    }
+  }
+
+  // Listen to changes on relevant inputs
+  ['age', 'ap_hi', 'ap_lo', 'cholesterol', 'gluc', 'smoke', 'alco', 'active'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', calculateRiskScore);
+    document.getElementById(id)?.addEventListener('change', calculateRiskScore);
+  });
+
+  function estimateHeartAge() {
+    let age = parseInt(document.getElementById("age")?.value || 0);
+    let ap_hi = parseInt(document.getElementById("ap_hi")?.value || 0);
+    let cholesterol = parseInt(document.getElementById("cholesterol")?.value || 1);
+    let gluc = parseInt(document.getElementById("gluc")?.value || 1);
+    let smoke = parseInt(document.getElementById("smoke")?.value || 0);
+    let alco = parseInt(document.getElementById("alco")?.value || 0);
+    let active = parseInt(document.getElementById("active")?.value || 1);
+
+    if (!age || age < 20) return;
+
+    // Custom heart age logic
+    let heartAge = age;
+
+    if (ap_hi >= 140) heartAge += 5;
+    if (cholesterol > 1) heartAge += (cholesterol - 1) * 4;
+    if (gluc > 1) heartAge += (gluc - 1) * 3;
+    if (smoke) heartAge += 5;
+    if (alco) heartAge += 3;
+    if (!active) heartAge += 2;
+
+    // Limit heart age to max 90
+    heartAge = Math.min(heartAge, 90);
+
+    let gap = heartAge - age;
+    let msg = `🧍 Your real age: ${age} | ❤️ Estimated heart age: ${heartAge}`;
+
+    if (gap <= 0) {
+      msg += " ✅ (You're doing great!)";
+    } else if (gap <= 5) {
+      msg += " ⚠️ (Slightly above normal)";
+    } else {
+      msg += " ❗ (Higher than expected)";
+    }
+
+    document.getElementById("heart-age-output").innerText = msg;
+    document.getElementById("heart-age-box").style.display = "block";
+  }
+
+  // Call heart age on form input
+  ['age', 'ap_hi', 'cholesterol', 'gluc', 'smoke', 'alco', 'active'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', estimateHeartAge);
+    document.getElementById(id)?.addEventListener('input', estimateHeartAge);
+  });
+</script>
+
+
+</body>
+</html>
